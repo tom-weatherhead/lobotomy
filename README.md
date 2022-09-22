@@ -45,9 +45,9 @@ An example of a "Hello, World!" program:
 ---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
 ```
 
-## Installation and Invocation (C)
+## Installation and Invocation
 
-(These instructions for the C implementation were tested on macOS)
+(These instructions were tested on macOS 12.5)
 
 First, ensure that gcc and make are installed.
 
