@@ -4,7 +4,7 @@
 /* To compile and link: $ make */
 /* To remove all build products: $ make clean */
 
-/* A demonstration: $ make && ./lobotomy ../../examples/hello-world.bf */
+/* A demonstration: $ make clean && make && ./lobotomy ../examples/hello-world.bf */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,7 +41,7 @@ int squareBracketPairIndices[2 * maxNumSquareBracketPairIndices];
 
 int leftSquareBracketIndices[maxNumSquareBracketPairIndices];
 
-BOOL calculateSquareBracketPairIndices(void) {
+static BOOL calculateSquareBracketPairIndices(void) {
 	int i = 0;
 	int sp = 0;	/* Stack pointer; for the leftSquareBracketIndices */
 
@@ -69,7 +69,6 @@ BOOL calculateSquareBracketPairIndices(void) {
 
 			squareBracketPairIndices[2 * numSquareBracketPairIndices] = leftSquareBracketIndices[--sp];
 			squareBracketPairIndices[2 * numSquareBracketPairIndices + 1] = i;
-			/* printf("SquareBracketPair %d: (%d, %d)\n", numSquareBracketPairIndices, squareBracketPairIndices[2 * numSquareBracketPairIndices], squareBracketPairIndices[2 * numSquareBracketPairIndices + 1]); */
 			++numSquareBracketPairIndices;
 		}
 
@@ -84,7 +83,7 @@ BOOL calculateSquareBracketPairIndices(void) {
 	return TRUE;
 }
 
-int getMatchingBracketIndex(int i, int bracketIndex) {
+static int getMatchingBracketIndex(int i, int bracketIndex) {
 	int j;
 
 	for (j = 0; j < numSquareBracketPairIndices; ++j) {
@@ -102,26 +101,27 @@ int getMatchingBracketIndex(int i, int bracketIndex) {
 
 /* 2022-08-15 : This works on MacOS 12.5 with gcc: */
 
-int getch()  {
-	int ch;
+static int getch()  {
 	struct termios oldattr, newattr;
 
 	tcgetattr(STDIN_FILENO, &oldattr);
 	newattr = oldattr;
 	newattr.c_lflag &= ~ICANON;
-	/* If the ECHO fplag is enabled, then we have implemented getche() rather than getch() */
+	/* If the ECHO flag is enabled, then we have implemented getche() rather than getch() */
 	newattr.c_lflag &= ~ECHO;
 	newattr.c_cc[VMIN] = 1;
 	newattr.c_cc[VTIME] = 0;
 	tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
-	ch = getchar();
+
+	const int ch = getchar();
+
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
 
 	return (ch == 4) ? EOF : ch;
 }
 /* #endif */
 
-BOOL readProgramFromFile(int argc, char * argv[]) {
+static BOOL readProgramFromFile(int argc, char * argv[]) {
 
 	if (argc < 2) {
 		fprintf(stderr, "readProgramFromFile() : Too few command-line arguments.\n");
@@ -158,15 +158,7 @@ BOOL readProgramFromFile(int argc, char * argv[]) {
 	return TRUE;
 }
 
-int mainDelegate(int argc, char * argv[]) {
-	/* The Hello, World program:
-	strcpy(programTape, "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++."); */
-
-	/* The Echo program:
-	strcpy(programTape, ",[.,]"); */
-
-	/* The ... program:
-	strcpy(programTape, ""); */
+static int mainDelegate(int argc, char * argv[]) {
 
 	if (!readProgramFromFile(argc, argv)) {
 		fprintf(stderr, "readProgramFromFile() failed.\n");
@@ -179,15 +171,6 @@ int mainDelegate(int argc, char * argv[]) {
 	}
 
 	printf("Starting the Brainfsck interpreter...\n\n");
-
-	/* printf("14 -> %d\n", getMatchingBracketIndex(14, 0));
-	printf("33 -> %d\n", getMatchingBracketIndex(33, 1));
-	printf("43 -> %d\n", getMatchingBracketIndex(43, 0));
-	printf("45 -> %d\n", getMatchingBracketIndex(45, 1));
-	printf("8 -> %d\n", getMatchingBracketIndex(8, 0));
-	printf("48 -> %d\n", getMatchingBracketIndex(48, 1));
-	printf("17 -> %d\n", getMatchingBracketIndex(17, 0));
-	printf("17 -> %d\n", getMatchingBracketIndex(17, 1)); */
 
 	int programTapeIndex = 0;
 	int dataTapeIndex = 0;
@@ -232,21 +215,10 @@ int mainDelegate(int argc, char * argv[]) {
 				break;
 
 			case ',': /* Input a character and store it in the cell at the pointer */
-				/* dataTape[dataTapeIndex] = (await getKeypress()).charCodeAt(0); */
-				/* getchar(); ? getch(); ? getc(); ? */
-
-				/* getchar() blocks execution until newline or EOF.
-				valueFromGetchar = getchar(); */
-
-				/* #if MACOS or LINUX */
 				valueFromGetchar = getch();
-				/* #endif */
-
-				/* getc(stdin) also blocks execution until newline or EOF.
-				valueFromGetchar = getc(stdin); */
 
 				if (valueFromGetchar == EOF) {
-					/* fprintf(stderr, "getchar() returned EOF\n");
+					/* fprintf(stderr, "getch() returned EOF\n");
 					return 1; */
 
 					/* Or just: */
@@ -285,7 +257,6 @@ int mainDelegate(int argc, char * argv[]) {
 				break;
 
 			case ']': /* Jump back to the matching [ if the cell at the pointer is nonzero */
-				/* printf("] : programTapeIndex is %d; data at %d is %d\n", programTapeIndex, dataTapeIndex, (int)dataTape[dataTapeIndex]); */
 
 				if (dataTape[dataTapeIndex] != 0) {
 					/* Find the index of the left bracket that matches this right bracket: */
@@ -324,4 +295,4 @@ int main(int argc, char * argv[]) {
 	return status;
 } /* main() */
 
-/* ******** End of brainfsck.c ******** */
+/* ******** End of lobotomy.c ******** */

@@ -3,7 +3,6 @@ A Brainf*ck interpreter written in C.
 
 (Pardon my language.)
 
-[![build status][build-status-badge-image]][build-status-url]
 [![latest tag][latest-tag-badge-image]][latest-tag-url]
 [![watchers][watchers-badge-image]][watchers-url]
 [![stars][stars-badge-image]][stars-url]
@@ -62,24 +61,7 @@ $ make
 Then pass in the path of a brainf*ck program file as a command-line argument:
 
 ```sh
-$ ./brainfsck ../../examples/hello-world.bf
-```
-
-## Installation and Invocation (Typescript)
-
-After cloning this repo, cd into its directory and do this:
-
-```sh
-$ npm run f
-$ npm link
-```
-
-Now the interpreter can be invoked from the command line via the 'bfi' command.
-
-Example:
-
-```sh
-$ bfi examples/hello-world.bf
+$ ./lobotomy ../examples/hello-world.bf
 ```
 
 ## About the Language
@@ -96,19 +78,9 @@ For additional brainf*ck resources, please see:
 - An x86_64 compiler for Linux: [here](https://github.com/depsterr/bc)
 - A brainf*ck 'torture test': [here](https://github.com/rdebath/Brainfuck)
 
-## Notes to self
-
-TODO: When tests are added, add these devDependencies:
-
-```sh
-$ npm i -D @babel/core @babel/preset-env @babel/preset-typescript @types/jest jest
-```
-
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
 
-[build-status-badge-image]: https://circleci.com/gh/tom-weatherhead/lobotomy.svg?style=shield
-[build-status-url]: https://circleci.com/gh/tom-weatherhead/lobotomy
 [latest-tag-badge-image]: https://badgen.net/github/tag/tom-weatherhead/lobotomy
 [latest-tag-url]: https://github.com/tom-weatherhead/lobotomy/tags
 [watchers-badge-image]: https://badgen.net/github/watchers/tom-weatherhead/lobotomy
